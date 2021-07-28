@@ -14,28 +14,28 @@ const addTileLayer = () => {
     }).addTo(map);
 };
 
+const getMarkerColor = value => {
+    if (value >= 90) 
+        return '#f90015';
+    else if (value >= 70)
+        return '#f55700';
+    else if (value >= 50)
+        return '#f1c100';
+    else if (value >= 30)
+        return '#eaef00'
+    else if (value >= 10)
+        return '#b3ed00'
+    else 
+        return '#00e51e'
+}
+
 const addDataPoints = () => {
     d3.json('static/data/all_week.geojson.json').then(data => {
-
-        const getMarkerColor = value => {
-            if (value >= 90) 
-                return '#f90015';
-            else if (value >= 70)
-                return '#f55700';
-            else if (value >= 50)
-                return '#f1c100';
-            else if (value >= 30)
-                return '#eaef00'
-            else if (value >= 10)
-                return '#b3ed00'
-            else 
-                return '#00e51e'
-        }
 
         data.features.forEach(dataPoint => {
             const lat = dataPoint.geometry.coordinates[1];
             const long = dataPoint.geometry.coordinates[0];
-            const magnitude = dataPoint.properties.mag * 2 ;
+            const magnitude = dataPoint.properties.mag;
             const depth = dataPoint.geometry.coordinates[2];
 
             L.circleMarker([lat, long],  {
@@ -47,9 +47,29 @@ const addDataPoints = () => {
     })
 };
 
+const addLegend = () => {
+    const legend = L.control({position: 'bottomright'})
+
+    legend.onAdd = () => {
+        var div = L.DomUtil.create('div', 'info legend'),
+            grades = [-10, 10, 30, 50, 70, 90];
+
+            for (let i = 0; i < grades.length; i++) {
+                div.innerHTML += 
+                    '<i style="background:' + getMarkerColor(grades[i] + 1) + '"></i> ' +
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');            
+                }
+
+            return div;
+    };
+
+    legend.addTo(map);
+}
+
 const init = () => {
     addTileLayer();
     addDataPoints();
+    addLegend();
 };
 
 init();
