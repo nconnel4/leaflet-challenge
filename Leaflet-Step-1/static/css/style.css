@@ -13,6 +13,8 @@ html {
   line-height: 18px;
   color: #555;
   background: white;
+  padding: 5px;
+  opacity: .8;
 }
 
 .legend i {
