@@ -53,9 +53,7 @@ const addEarthquakeData = () => {
                 color: getMarkerColor(depth),
                 fillColor: getMarkerColor(depth),
                 fillOpacity: 0.5
-            })
-
-            circle.bindPopup('<b>Date/Time:</b>' + time + '<br>' +
+            }).bindPopup('<b>Date/Time:</b>' + time + '<br>' +
                 '<b>Coordinates: </b>[' + lat + ', ' + long + ']<br>' +
                 '<b>Magnitude:</b>' + magnitude + '<br>' +
                 '<b>Depth:</b>' + depth + 'km<br>')
