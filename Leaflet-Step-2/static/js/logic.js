@@ -1,6 +1,6 @@
 const map = L.map('mapid', {
-    center: [45.52, -122.67],
-    zoom: 2
+    center: [28.4449, -43.6699],
+    zoom: 2.5
   });
 
 const addTileLayer = () => {
@@ -29,7 +29,7 @@ const getMarkerColor = value => {
         return '#00e51e'
 }
 
-const addDataPoints = () => {
+const addEarthquakeData = () => {
     d3.json('static/data/all_week.geojson.json').then(data => {
 
         data.features.forEach(dataPoint => {
@@ -51,6 +51,22 @@ const addDataPoints = () => {
             '<b>Depth:</b>' + depth + 'km<br>')
             
         })
+    })
+};
+
+const addTectonicBoundaries = () => {
+    d3.json('static/data/PB2002_plates.json').then(data => {
+        console.log(data)
+
+        L.geoJSON(data, {
+            style: function(feature) {
+                return {
+                    color: 'orange',
+                    fillOpacity: 0,
+                    weight: 1
+                }
+            }
+        }).addTo(map);
     })
 };
 
@@ -77,7 +93,8 @@ const addLegend = () => {
 
 const init = () => {
     addTileLayer();
-    addDataPoints();
+    addTectonicBoundaries();
+    addEarthquakeData();
     addLegend();
 };
 
