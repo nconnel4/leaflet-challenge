@@ -35,14 +35,21 @@ const addDataPoints = () => {
         data.features.forEach(dataPoint => {
             const lat = dataPoint.geometry.coordinates[1];
             const long = dataPoint.geometry.coordinates[0];
-            const magnitude = dataPoint.properties.mag;
+            const magnitude = dataPoint.properties.mag * 2;
             const depth = dataPoint.geometry.coordinates[2];
+            const time = new Date(dataPoint.properties.time * 1000);
 
-            L.circleMarker([lat, long],  {
+            var circle = L.circleMarker([lat, long],  {
                 radius:magnitude,
                 color: getMarkerColor(depth),
                 fillColor: getMarkerColor(depth),
                 fillOpacity: 0.5}).addTo(map);
+
+            circle.bindPopup('<b>Date/Time:</b>' + time + '<br>' + 
+            '<b>Coordinates: </b>[' + lat + ', ' + long + ']<br>' + 
+            '<b>Magnitude:</b>' + magnitude + '<br>' + 
+            '<b>Depth:</b>' + depth + 'km<br>')
+            
         })
     })
 };
@@ -54,13 +61,15 @@ const addLegend = () => {
         var div = L.DomUtil.create('div', 'info legend'),
             grades = [-10, 10, 30, 50, 70, 90];
 
-            for (let i = 0; i < grades.length; i++) {
-                div.innerHTML += 
-                    '<i style="background:' + getMarkerColor(grades[i] + 1) + '"></i> ' +
-                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');            
-                }
+        div.innerHTML += '<b>Depth (km)</b><br>'
 
-            return div;
+        for (let i = 0; i < grades.length; i++) {
+             div.innerHTML +=
+                '<i style="background:' + getMarkerColor(grades[i] + 1) + '"></i> ' +
+                 grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');            
+             }
+
+         return div;
     };
 
     legend.addTo(map);
